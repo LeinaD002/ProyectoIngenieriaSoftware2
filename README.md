@@ -26,4 +26,5 @@ El programa requiere exactamente cinco valores enteros. Si la cantidad o el form
 - El repositorio Git local está inicializado y contiene los commits `db65987` (programa) y `4319d2a` (este estado).
 - VirtualBox tiene registrada la VM `Jenkins TurnKey Linux 19.0` con 1536 MB de RAM, 1 CPU, disco virtual dinámico de 8 GB, red puenteada y el ISO oficial conectado. La ISO está en `../Turnkey-Jenkins-VM/turnkey-jenkins-19.0-trixie-amd64.iso`.
 - La VM queda apagada: el equipo reportó aproximadamente 0.9 GB de RAM libre, menos de los 1.5 GB que necesita la máquina virtual. Al iniciar TurnKey, completa personalmente cualquier pantalla que solicite contraseñas.
-- Subclipse y la publicación en GitHub quedan pendientes. No hay aún un repositorio remoto creado para este proyecto. Cuando exista, conecta con `git remote add origin <URL>` y publica con `git push -u origin main`.
+- Subclipse 4.3.4 quedó instalado desde Eclipse Marketplace (con JavaHL, SVNKit y Revision Graph; Mylyn se omitió por incompatibilidad con el Eclipse instalado). Falta publicar en GitHub: no hay aún un repositorio remoto creado para este proyecto. Cuando exista, conecta con `git remote add origin <URL>` y publica con `git push -u origin main`.
+
