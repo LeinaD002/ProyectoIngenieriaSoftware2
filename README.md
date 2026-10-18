@@ -29,4 +29,5 @@ El proyecto Eclipse usa JDK 21 y está importado en el workspace local.
 
 El repositorio Git local está en la rama `main`. Aún no tiene remoto GitHub, por lo que falta publicarlo en la cuenta del estudiante.
 
-La VM inicia, pero al comprobarla desde el host HTTPS responde `503 Service Unavailable` y el puerto 8080 rechaza conexiones. Por tanto, Jenkins todavía no está disponible y esta parte debe repararse dentro de TurnKey. Webmin solicita autenticación; no se guardan credenciales en este proyecto.
+La VM arranca y Jenkins quedó activo tras reiniciar el servicio desde la consola local. Verificado desde el host: `http://192.168.0.20:8080/login` responde `200` y Jetty anuncia Jenkins 2.568.2. HTTPS ya alcanza Jenkins; su página principal responde `403` a visitantes anónimos, como corresponde a las reglas de permisos. No se guardan credenciales en este proyecto.
+
