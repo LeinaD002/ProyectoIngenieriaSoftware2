@@ -29,5 +29,6 @@ El proyecto Eclipse usa JDK 21 y está importado en el workspace local.
 
 El repositorio Git local está en la rama `main`. Aún no tiene remoto GitHub, por lo que falta publicarlo en la cuenta del estudiante.
 
-La VM arranca y Jenkins quedó activo tras reiniciar el servicio desde la consola local. Verificado desde el host: `http://192.168.0.20:8080/login` responde `200` y Jetty anuncia Jenkins 2.568.2. HTTPS ya alcanza Jenkins; su página principal responde `403` a visitantes anónimos, como corresponde a las reglas de permisos. No se guardan credenciales en este proyecto.
+Jenkins 2.568.2 se verificó activo antes del apagado de la PC: `http://192.168.0.20:8080/login` respondió `200`. Después del apagado y nuevo arranque, la VM no obtuvo una dirección IPv4 y Jenkins quedó inaccesible desde el host; la consola local espera inicio de sesión para revisar DHCP y reiniciar el servicio. No se guardan credenciales en este proyecto.
+
 
