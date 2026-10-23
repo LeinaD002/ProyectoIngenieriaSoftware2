@@ -6,8 +6,8 @@ Aplicación de consola que recibe cinco enteros en este orden: meses, semanas, d
 
 Paquete: `gt.edu.umes.proy.calculo`
 
-- `CalculaMinutos`: punto de entrada, procesa los argumentos y muestra el total.
-- `LogicaDelNegocio`: valida cantidad y formato, y calcula el total usando operaciones que detectan desbordamiento.
+- `CalculaMinutos`: punto de entrada.
+- `LogicaDelNegocio`: validación y cálculo con detección de desbordamiento.
 
 Ejemplo:
 
@@ -16,19 +16,13 @@ java gt.edu.umes.proy.calculo.CalculaMinutos 1 2 5 3 20
 Total en segundos: 4245600
 ```
 
-El proyecto Eclipse usa JDK 21 y está importado en el workspace local.
+## Verificación de esta sesión
 
-## Entorno solicitado
+- Proyecto Eclipse Java con JDK 21 y estructura de paquetes solicitada.
+- Eclipse tiene Subclipse 4.3.4 y sus adaptadores instalados en `dropins`.
+- La VM TurnKey Jenkins 19.0 está registrada en VirtualBox con 1536 MB de RAM, 1 CPU, disco virtual de 8 GB y adaptador puente.
+- Compilación y ejecución del ejemplo confirmadas el 23 de octubre de 2026.
+- El repositorio local `main` contiene commits, pero no tiene remoto GitHub configurado. La publicación requiere crear/seleccionar el repositorio en tu cuenta e iniciar sesión.
+- La VM está apagada. El último registro encontrado indica que al reiniciar el host no obtuvo IPv4 y que Jenkins dejó de ser accesible. Confirma el arranque y la red antes de dar esta parte por terminada.
 
-- Eclipse IDE for Java Developers está instalado.
-- Subclipse 4.3.4 y el adaptador JavaHL 1.14 para Windows x64 están instalados desde el paquete oficial y descubiertos desde `dropins` de Eclipse.
-- La VM `Jenkins TurnKey Linux 19.0` está instalada en VirtualBox: 1 CPU, 1536 MB de RAM, disco de 8 GB, red puenteada y arranque desde disco. ISO oficial conectada como segundo dispositivo de arranque.
-- La VM arranca y muestra `192.168.0.20`. TurnKey informa los servicios web, Webmin y SSH.
-
-## Estado de publicación y Jenkins
-
-El repositorio Git local está en la rama `main`. Aún no tiene remoto GitHub, por lo que falta publicarlo en la cuenta del estudiante.
-
-Jenkins 2.568.2 se verificó activo antes del apagado de la PC: `http://192.168.0.20:8080/login` respondió `200`. Después del apagado y nuevo arranque, la VM no obtuvo una dirección IPv4 y Jenkins quedó inaccesible desde el host; la consola local espera inicio de sesión para revisar DHCP y reiniciar el servicio. No se guardan credenciales en este proyecto.
-
-
+Consulta `GUIA-PASO-A-PASO.md` para continuar, publicar el repositorio y recuperar el acceso a Jenkins.
