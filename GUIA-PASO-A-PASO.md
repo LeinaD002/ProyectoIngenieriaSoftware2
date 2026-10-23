@@ -10,18 +10,19 @@ Esta guía separa lo comprobado en los archivos de lo que aún debes completar e
 - La VM TurnKey Linux Jenkins 19.0 aparece registrada en VirtualBox. Sus recursos visibles cumplen: 1536 MB RAM, un procesador, disco de 8 GB y red en modo puente.
 - Compilé las dos clases con Java 21 y ejecuté el ejemplo del PDF. Resultado: `Total en segundos: 4245600`.
 - Git tiene rama `main` y commits locales, pero no hay ningún remoto `origin`; por eso el proyecto todavía no aparece publicado en GitHub desde este repositorio.
-- La VM está apagada. El registro anterior dice que tras reiniciar Windows no obtuvo IP y Jenkins no quedó accesible.
+- La VM TurnKey arrancó el 23 de octubre de 2026 y su consola muestra `https://192.168.0.14`, además de Web Shell en `:12320` y Webmin en `:12321`.
+- Se restableció la contraseña del usuario Linux `root` desde la consola de recuperación; TurnKey confirmó `password updated successfully`. La VM reinició y volvió a mostrar la consola azul. No se guardó la contraseña en estos archivos.
+- La dirección `http://192.168.0.14:8080/login` que estaba abierta no respondió. Para TurnKey Jenkins 19, prueba la URL base que muestra la consola: `https://192.168.0.14/` (sin `:8080`).
+- El login web de Jenkins es separado: TurnKey documenta el usuario `jenkins-admin` y no ofrece una contraseña predeterminada. La contraseña root cambiada no debe asumirse como contraseña de Jenkins.
 
 ## Qué abrir la próxima vez
 
 1. Abre VirtualBox y selecciona **Jenkins TurnKey Linux 19.0**. La VM original está aquí:
    `C:\Users\rudya\Documents\Codex\2026-10-15\n\outputs\Turnkey-Jenkins-VM\Jenkins TurnKey Linux 19.0`
 2. Inicia la VM desde el disco duro. Déjala terminar el arranque.
-3. Si la consola inicia sesión, el usuario del sistema es `root`; esta es la contraseña del servidor TurnKey que se estableció durante el primer arranque. No es necesariamente la contraseña de Jenkins.
-4. En la consola de TurnKey revisa la IPv4 con:
-   `ip -4 addr`
-   Busca la dirección asignada a la interfaz Ethernet, normalmente algo como `192.168.x.x`. Si no aparece dirección, revisa en VirtualBox: **Configuración > Red > Adaptador 1**, marca **Habilitar adaptador de red**, selecciona **Adaptador puente** y el adaptador físico que esté conectado a Internet. Guarda y reinicia la VM.
-5. Desde Windows abre en el navegador `http://DIRECCION-IP:8080/login`, sustituyendo `DIRECCION-IP` por la IP que mostró la VM. Si no carga, vuelve a la consola y ejecuta `systemctl status jenkins --no-pager` para comprobar el servicio.
+3. La consola azul de TurnKey ya muestra los accesos. En el estado actual, la URL web indicada es `https://192.168.0.14/`. Si la red de la computadora cambia, usa la dirección que aparezca en la consola.
+4. Desde Windows abre `https://192.168.0.14/`. Si el navegador presenta una advertencia por el certificado autofirmado, comprueba que la dirección sea la IP local de tu VM y acepta la excepción tú mismo. No agregues `:8080`.
+5. Para Jenkins prueba el usuario `jenkins-admin`. No hay contraseña predeterminada; TurnKey la establece durante la inicialización. Si no la recuerdas, la contraseña `root` de Linux no necesariamente sirve para Jenkins.
 6. Abre Eclipse desde la carpeta de recuperación:
    `C:\Users\rudya\Documents\Codex\2026-10-15\n\work\Eclipse-recovery\eclipse\eclipse.exe`
 7. Cuando Eclipse pregunte por el workspace, selecciona la carpeta del workspace que ya usabas. Para importar este proyecto: **File > Import > General > Existing Projects into Workspace**, y selecciona la carpeta donde está el proyecto descargado/clonado. El proyecto de esta entrega está en `outputs\Proyecto-Ingenieria-Software-2-Fase-1` de esta sesión.
@@ -47,33 +48,19 @@ git push
 
 Si Git dice que `origin` ya existe, revisa `git remote -v` y actualiza con `git remote set-url origin https://github.com/TU-USUARIO/TU-REPO.git`.
 
-## Contraseñas: Jenkins y TurnKey son accesos distintos
+## Contraseñas: Jenkins y TurnKey
 
-- **Contraseña del sitio web Jenkins:** protege la página `:8080`.
-- **Contraseña de TurnKey/Linux (`root`):** permite administrar la VM desde su consola o SSH. Se necesita para los pasos de recuperación siguientes.
+- **TurnKey/Linux (`root`):** permite administrar el sistema de la VM desde consola o SSH. El restablecimiento de esta sesión quedó confirmado tras usar la recuperación de VirtualBox. No repitas ese procedimiento salvo que vuelvas a perder acceso.
+- **Jenkins (`jenkins-admin`):** cuenta separada para la aplicación web. TurnKey configura autenticación PAM y no publica una contraseña predeterminada; se define durante la inicialización.
 - La contraseña inicial de desbloqueo de Jenkins solo aplica si todavía aparece la pantalla “Unlock Jenkins”. No sirve para restablecer un usuario ya configurado.
 
-### Si recuerdas la contraseña root de TurnKey pero olvidaste la de Jenkins
+### Si no puedes iniciar sesión en Jenkins
 
-Sigue el procedimiento oficial de Jenkins para restablecer la contraseña del administrador. La edición de configuración desactiva temporalmente el control de acceso, así que hazlo solo desde la consola de VirtualBox y, antes de iniciar Jenkins sin autenticación, desconecta temporalmente el adaptador puente en **Configuración > Red** para no exponer el servicio a la red.
+Primero prueba la URL base `https://IP-DE-LA-VM/`, el usuario `jenkins-admin` y la contraseña definida al inicializar TurnKey. La documentación de TurnKey indica que Jenkins usa PAM. Cambiar `root` no cambia esa contraseña. No edites `config.xml` ni desactives la seguridad: ese procedimiento anterior no es apropiado para esta instalación PAM y podría dejar Jenkins expuesto.
 
-En la consola de TurnKey inicia sesión como `root`, luego ejecuta:
+Si sigue sin funcionar, confirma desde una sesión administrativa de la VM la cuenta PAM que existe y su estado antes de restablecerla. No uses `passwd jenkins-admin` sin verificar primero que esa cuenta exista y que Jenkins autentique por PAM en esta instalación. Si se necesita cambiar una credencial, hazlo en la consola local de la VM y nunca guardes la contraseña en el repositorio.
 
-```bash
-systemctl stop jenkins
-cp /var/lib/jenkins/config.xml /var/lib/jenkins/config.xml.respaldo
-nano /var/lib/jenkins/config.xml
-```
-
-Busca `<useSecurity>true</useSecurity>` y cámbialo por `<useSecurity>false</useSecurity>`. Guarda en nano con `Ctrl+O`, `Enter`, `Ctrl+X`. Luego:
-
-```bash
-systemctl start jenkins
-```
-
-Vuelve a conectar la red, averigua la IP con `ip -4 addr` y entra a `http://DIRECCION-IP:8080`. Sin dejar pasar tiempo, en Jenkins abre **Manage Jenkins > Security**. Selecciona la base de usuarios interna de Jenkins, confirma que el registro público de usuarios esté desmarcado y guarda. Entra al usuario administrador desde **Users**, abre **Configure**, cambia la contraseña y guarda. Finalmente confirma en **Security** que la autorización sea para usuarios autenticados, que el acceso anónimo esté desactivado y que la seguridad esté habilitada. Cierra sesión y vuelve a iniciar con la nueva contraseña para confirmar.
-
-Si el archivo no contiene exactamente `<useSecurity>true</useSecurity>` o `/var/lib/jenkins/config.xml` no existe, no improvises sobre otro archivo: revisa el estado/ubicación de Jenkins y consulta su directorio `JENKINS_HOME`. Puedes restaurar el respaldo con el servicio detenido si necesitas deshacer el cambio.
+TurnKey 19 documenta la cuenta `jenkins-admin`, la autenticación PAM y la URL en la raíz del servidor. Consulta la guía oficial de TurnKey Jenkins antes de cualquier recuperación adicional.
 
 ### Si olvidaste también la contraseña root de TurnKey
 
@@ -95,5 +82,7 @@ Debe imprimir `Total en segundos: 4245600`. Para demostrar la validación, prueb
 - Copié el proyecto local con su historial Git a la carpeta de resultados de esta sesión.
 - Actualicé el README del proyecto con el estado comprobado y preparé esta guía para que puedas retomarlo en tu computadora.
 - Compilé y ejecuté el ejemplo esperado.
+- Abrí Eclipse con el proyecto y verifiqué el código (0 errores de Eclipse y una advertencia).
+- Restablecí la contraseña Linux de `root` usando la consola de recuperación. La pantalla confirmó que se actualizó; luego reinicié la VM y comprobé que TurnKey volvió a la consola azul con su dirección web.
 
-No asocié GitHub porque no hay una dirección de repositorio ni una sesión de GitHub confirmada en este checkout. No cambié contraseñas porque la VM está apagada y no se encontró una sesión root abierta; no guardaré credenciales en archivos.
+GitHub sigue pendiente: este checkout no tiene remoto y publicar requiere el repositorio destino y autenticación de tu cuenta. La contraseña de Jenkins también queda pendiente de confirmar porque no es la contraseña root y el navegador aún no llegó al login exitoso.
