@@ -1,4 +1,4 @@
-	package gt.edu.umes.proy.calculo;
+package gt.edu.umes.proy.calculo;
 
 /** Punto de entrada de la aplicación de conversión a segundos. */
 public class CalculaMinutos {
